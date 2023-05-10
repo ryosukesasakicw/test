@@ -1,0 +1,40 @@
+name: Deploy Jobs For PR
+
+on:
+  pull_request:
+    paths:
+      - '.github/**'
+      - 'projects/monitoring/**'
+
+jobs:
+  develop:
+    name: CDK Deploy Acrtions Dev
+    if: ${{ github.base_ref == 'develop' && github.event.review.state == 'approved' }}
+    uses: ./.github/workflows/deploy.yml
+    secrets: inherit
+    with:
+      env_name: develop
+
+  release:
+    name: CDK Deploy Acrtions Release
+    if: ${{ github.base_ref == 'release' && github.event.review.state == 'approved' }}
+    uses: ./.github/workflows/deploy.yml
+    secrets: inherit
+    with:
+      env_name: release
+
+  stage:
+    name: CDK Deploy Acrtions Stage
+    if: ${{ github.base_ref == 'stage' && github.event.review.state == 'approved' }}
+    uses: ./.github/workflows/deploy.yml
+    secrets: inherit
+    with:
+      env_name: stage
+
+  prod:
+    name: CDK Deploy Actions Prod
+    if: ${{ github.base_ref == 'main' && github.event.review.state == 'approved' }}
+    uses: ./.github/workflows/deploy.yml
+    secrets: inherit
+    with:
+      env_name: prod

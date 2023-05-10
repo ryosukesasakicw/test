@@ -1,0 +1,16 @@
+name: Build Env
+
+runs:
+  using: 'composite'
+  steps:
+    - name: Setup Node
+      uses: actions/setup-node@v3
+      with:
+        node-version: '18.x'
+        cache: npm
+    - name: Install Dependency For Node
+      shell: bash
+      working-directory: ./projects/monitoring
+      run: |
+        npm install -g npm@8.X
+        npm ci
