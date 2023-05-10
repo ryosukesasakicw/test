@@ -2,6 +2,11 @@ name: Deploy Jobs For PR
 
 on:
   pull_request:
+    branches:
+      - develop
+      - 'release/**'
+      - 'stage'
+      - 'main'
     paths:
       - '.github/**'
       - 'projects/monitoring/**'
@@ -17,7 +22,7 @@ jobs:
 
   release:
     name: CDK Deploy Acrtions Release
-    if: ${{ github.base_ref == 'release' }}
+    if: ${{ startsWith(github.base_ref, 'release/') }}
     uses: ./.github/workflows/deploy.yml
     secrets: inherit
     with:

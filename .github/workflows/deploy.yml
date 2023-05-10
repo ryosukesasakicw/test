@@ -1,5 +1,5 @@
 name: Deploy Monitoring
-# memo 02
+# memo rel01
 on:
   workflow_dispatch:
     inputs:
