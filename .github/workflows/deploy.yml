@@ -1,5 +1,5 @@
 name: Deploy Monitoring
-# memo 04-2
+# memo 04-3
 on:
   workflow_dispatch:
     inputs:
@@ -49,4 +49,5 @@ jobs:
           echo "${{ inputs.env_name }}: Deploy"
           echo "${{ env.ROLE_TO_ASSUME_MEMBER }}"
           echo "${{ env.ROLE_TO_ASSUME_SEC }}"
+          exit 1
       
