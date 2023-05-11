@@ -69,9 +69,9 @@ jobs:
       - id: step1
         run: |
           echo "--------------ROLE_TO_ASSUME_SEC1-----------------"
-          echo ${{ vars.ROLE_TO_ASSUME_SEC1 }}
+          echo ${{ secrets.ROLE_TO_ASSUME_SEC }}
           echo "-------------------------------"
-          echo "test=${{ vars.ROLE_TO_ASSUME_SEC1 }}" >> "$GITHUB_OUTPUT"
+          echo "test=${{ secrets.ROLE_TO_ASSUME_SEC }}" >> "$GITHUB_OUTPUT"
       - id: step2
         run: echo "test=wold" >> "$GITHUB_OUTPUT"
   job2:
