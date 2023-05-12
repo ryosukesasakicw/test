@@ -70,6 +70,7 @@ jobs:
         run: |
           echo "--------------ROLE_TO_ASSUME_SEC1-----------------"
           echo ${{ vars.ROLE_TO_ASSUME_SEC1 }}
+          echo ${{ vars.ROLE_TO_ASSUME_SEC2 }}
           echo "-------------------------------------"
           echo "test=${{ vars.ROLE_TO_ASSUME_SEC1 }}" >> "$GITHUB_OUTPUT"
       - id: step2
