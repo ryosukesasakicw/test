@@ -16,6 +16,12 @@ on:
       - '.github/**'
       - 'projects/monitoring/**'
 
+permissions:
+  id-token: write # use id-token(federation role)
+  contents: read # use id-token(federation role)
+  pull-requests: write
+  issues: write
+
 jobs:
   add_tags:
     name: Add Tags
