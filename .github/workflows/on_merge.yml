@@ -9,6 +9,7 @@ on:
       - 'test/github_actions'
       - 'test/ga3'
       - 'test/ga3-1'
+      - 'feature/test06'
     types:
       - closed
     paths:
