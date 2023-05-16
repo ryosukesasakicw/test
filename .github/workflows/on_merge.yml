@@ -1,0 +1,94 @@
+name: Jobs For Merge On PR
+
+on:
+  pull_request:
+    branches:
+      # - 'release/**'
+      # - stage
+      # - main
+      - 'test/github_actions'
+      - 'test/ga3'
+      - 'test/ga3-1'
+      - 'feature/test06'
+    types:
+      - closed
+    paths:
+      - '.github/**'
+      - 'projects/monitoring/**'
+
+jobs:
+  add_tags:
+    name: Add Tags
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v3
+
+      # - name: Set Version To GITHUB_ENV
+      #   run: |
+      #     version=$(cat ./projects/monitoring/package.json | jq -r .version)
+      #     echo "VERSION --> ${version}"
+      #     echo "VERSION=${version}" >> $GITHUB_ENV
+
+      - name: Create Tag
+        uses: actions/github-script@v6
+        env:
+          TAG_NAME: '1.0.0'
+          SHA: '${{ github.sha }}'
+        with:
+          script: |
+            const {SHA, TAG_NAME} = process.env;
+            console.log('TAG_NAME:: ', TAG_NAME);
+            console.log('SHA:: ', SHA);
+            try {
+                console.log('-------------createTag2--------------');
+                const tagRes = await github.rest.git.createTag({
+                  owner: context.repo.owner,
+                  repo: context.repo.repo,
+                  tag: TAG_NAME,
+                  message: 'create by github-actions[bot]',
+                  object: SHA,
+                  type: 'commit',
+                });
+                console.log('tagRes:: ', tagRes);
+                console.log('---------------createRef------------');
+
+                const tagRef = await github.rest.git.createRef({
+                  owner: context.repo.owner,
+                  repo: context.repo.repo,
+                  ref: 'refs/tags/${TAG_NAME}',
+                  sha: SHA,
+                });
+                console.log('--------------create-end------------');
+                return;
+            } catch (e) {
+                console.error(e.message);
+                if (e.message === 'Reference already exists' ){
+                  console.log("exists tag.");
+                } else {
+                  console.error(e);
+                  throw e;
+                }
+            }
+            console.log('-------------update--------------');
+
+      # リリースノートはGithubの自動生成機能を利用する
+      - name: Create Release
+        if: ${{ github.base_ref == 'main' }}
+        # if: ${{ github.base_ref == 'test/github_actions' }}
+        uses: actions/github-script@v6
+        env:
+          TAG_NAME: '${{ env.VERSION }}'
+        with:
+          script: |
+            const fs = require('fs');
+            const {TAG_NAME} = process.env;
+            const res = await github.rest.repos.createRelease({
+              owner: context.repo.owner,
+              repo: context.repo.repo,
+              tag_name: TAG_NAME,
+              name: TAG_NAME,
+              draft: true,
+              generate_release_notes: true
+            });
+            console.log(res);
