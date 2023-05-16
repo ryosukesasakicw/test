@@ -21,6 +21,7 @@ permissions:
   contents: read # use id-token(federation role)
   pull-requests: write
   issues: write
+  actions: read
 
 jobs:
   add_tags:
