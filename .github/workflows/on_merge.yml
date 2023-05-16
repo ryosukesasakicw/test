@@ -33,44 +33,35 @@ jobs:
       - name: Create Tag
         uses: actions/github-script@v6
         env:
-          TAG_NAME: '1.0.1'
+          TAG_NAME: '1.0.2'
           SHA: '${{ github.sha }}'
         with:
           script: |
             const {SHA, TAG_NAME} = process.env;
             console.log('TAG_NAME:: ', TAG_NAME);
             console.log('SHA:: ', SHA);
-            try {
-                console.log('-------------createTag2--------------');
-                const tagRes = await github.rest.git.createTag({
-                  owner: context.repo.owner,
-                  repo: context.repo.repo,
-                  tag: TAG_NAME,
-                  message: 'create by github-actions[bot]',
-                  object: SHA,
-                  type: 'commit',
-                });
-                console.log('tagRes:: ', tagRes);
-                console.log('---------------createRef------------');
+            console.log('-------------createTag2--------------');
+            const tagRes = await github.rest.git.createTag({
+              owner: context.repo.owner,
+              repo: context.repo.repo,
+              tag: TAG_NAME,
+              message: 'create by github-actions[bot]',
+              object: SHA,
+              type: 'commit',
+            });
+            console.log('tagRes:: ', tagRes);
+            console.log('---------------createRef------------');
 
-                const tagRef = await github.rest.git.createRef({
-                  owner: context.repo.owner,
-                  repo: context.repo.repo,
-                  ref: 'refs/tags/${TAG_NAME}',
-                  sha: SHA,
-                });
-                console.log('--------------create-end------------');
-                return;
-            } catch (e) {
-                console.error(e.message);
-                if (e.message === 'Reference already exists' ){
-                  console.log("exists tag.");
-                } else {
-                  console.error(e);
-                  throw e;
-                }
-            }
-            console.log('-------------update--------------');
+            const tagRef = await github.rest.git.createRef({
+              owner: context.repo.owner,
+              repo: context.repo.repo,
+              ref: 'refs/tags/${TAG_NAME}',
+              sha: SHA,
+            });
+            console.log('--------------create-end------------');            
+
+
+
 
       # リリースノートはGithubの自動生成機能を利用する
       - name: Create Release
