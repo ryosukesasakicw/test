@@ -41,8 +41,7 @@ jobs:
             console.log('TAG_NAME:: ', TAG_NAME);
             console.log('SHA:: ', SHA);
             console.log('-------------createTag2--------------');
-            
-            console.log('tagRes:: ', tagRes);
+
             console.log('---------------createRef------------');
 
             const tagRef = await github.rest.git.createRef({
