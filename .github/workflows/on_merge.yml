@@ -65,7 +65,7 @@ jobs:
 
       # リリースノートはGithubの自動生成機能を利用する
       - name: Create Release
-        if: ${{ github.base_ref == 'main' }}
+        # if: ${{ github.base_ref == 'main' }}
         # if: ${{ github.base_ref == 'test/github_actions' }}
         uses: actions/github-script@v6
         env:
