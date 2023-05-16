@@ -24,16 +24,16 @@ jobs:
       - name: Checkout
         uses: actions/checkout@v3
 
-      # - name: Set Version To GITHUB_ENV
-      #   run: |
-      #     version=$(cat ./projects/monitoring/package.json | jq -r .version)
-      #     echo "VERSION --> ${version}"
-      #     echo "VERSION=${version}" >> $GITHUB_ENV
+      - name: Set Version To GITHUB_ENV
+        run: |
+          version=$(cat ./projects/monitoring/package.json | jq -r .version)
+          echo "VERSION --> ${version}"
+          echo "VERSION=${version}" >> $GITHUB_ENV
 
       - name: Create Tag
         uses: actions/github-script@v6
         env:
-          TAG_NAME: '1.0.0'
+          TAG_NAME: '${{ env.VERSION }}'
           SHA: '${{ github.sha }}'
         with:
           script: |
@@ -41,14 +41,7 @@ jobs:
             console.log('TAG_NAME:: ', TAG_NAME);
             console.log('SHA:: ', SHA);
             console.log('-------------createTag2--------------');
-            const tagRes = await github.rest.git.createTag({
-              owner: context.repo.owner,
-              repo: context.repo.repo,
-              tag: TAG_NAME,
-              message: 'create by github-actions[bot]',
-              object: SHA,
-              type: 'commit',
-            });
+            
             console.log('tagRes:: ', tagRes);
             console.log('---------------createRef------------');
 
@@ -59,9 +52,6 @@ jobs:
               sha: SHA,
             });
             console.log('--------------create-end------------');            
-
-
-
 
       # リリースノートはGithubの自動生成機能を利用する
       - name: Create Release
