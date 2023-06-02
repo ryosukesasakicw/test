@@ -13,25 +13,25 @@ on:
 
 jobs:
   develop:
-    name: CDK Deploy Acrtions Dev
-    if: ${{ github.base_ref == 'develop' }}
-    uses: ./.github/workflows/deploy.yml
+    name: CDK Deploy Actions Develop
+    # if: ${{ github.base_ref == 'develop' }}
+    uses: ./.github/workflows/reuse_deploy.yml
     secrets: inherit
     with:
       env_name: develop
 
   release:
-    name: CDK Deploy Acrtions Release
+    name: CDK Deploy Actions Release
     if: ${{ startsWith(github.base_ref, 'release/') }}
-    uses: ./.github/workflows/deploy.yml
+    uses: ./.github/workflows/reuse_deploy.yml
     secrets: inherit
     with:
       env_name: release
 
   stage:
-    name: CDK Deploy Acrtions Stage
+    name: CDK Deploy Actions Stage
     if: ${{ github.base_ref == 'stage' }}
-    uses: ./.github/workflows/deploy.yml
+    uses: ./.github/workflows/reuse_deploy.yml
     secrets: inherit
     with:
       env_name: stage
@@ -39,7 +39,7 @@ jobs:
   prod:
     name: CDK Deploy Actions Prod
     if: ${{ github.base_ref == 'main' }}
-    uses: ./.github/workflows/deploy.yml
+    uses: ./.github/workflows/reuse_deploy.yml
     secrets: inherit
     with:
       env_name: prod

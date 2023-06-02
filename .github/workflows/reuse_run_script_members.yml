@@ -1,0 +1,43 @@
+name: Deploy Common Resources Script For Members
+
+on:
+  workflow_call:
+    inputs:
+      env_name:
+        required: true
+        type: string
+
+permissions:
+  id-token: write # use id-token(federation role)
+  contents: read # use id-token(federation role)
+  pull-requests: write
+  issues: write
+
+env:
+  AWS_PROFILE: github-actions
+
+jobs:
+  com-resources-generate-input-value:
+    name: Common Resources Input Generate
+    runs-on: ubuntu-latest
+    environment:
+      name: ${{ inputs.env_name }}
+    outputs:
+      accounts: ${{ steps.generate.outputs.accounts }}
+    steps:
+      - id: generate
+        run: echo "accounts=["test1","test2"]" >> "$GITHUB_OUTPUT"
+
+  com-resources-deploy:
+    name: Common Resources Deploy
+    runs-on: ubuntu-latest
+    needs: com-resources-generate-input-value
+    environment:
+      name: ${{ inputs.env_name }}
+    strategy:
+      matrix:
+        account_id: ${{ fromJSON(needs.com-resources-generate-input-value.outputs.accounts) }}
+    steps:
+      - id: step1
+        run: |
+          echo "--------------TEST2-----------------"

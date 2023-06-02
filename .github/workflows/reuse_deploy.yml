@@ -1,0 +1,37 @@
+name: Deploy Monitoring
+
+on:
+  workflow_call:
+    inputs:
+      env_name:
+        required: true
+        type: string
+
+permissions:
+  id-token: write # use id-token(federation role)
+  contents: read # use id-token(federation role)
+  pull-requests: write
+  issues: write
+
+env:
+  AWS_REGION: ap-northeast-1
+  AWS_PROFILE: github-actions
+
+jobs:
+  stack-resources-deploy:
+    name: Stack Resources Deploy
+    runs-on: ubuntu-latest
+    environment:
+      name: ${{ inputs.env_name }}
+    steps:
+      - id: step1
+        run: |
+          echo "--------------TEST-----------------"
+
+  com-resources-deploy:
+    name: Common Resources Deploy
+    needs: stack-resources-deploy
+    uses: ./.github/workflows/reuse_run_script_members.yml
+    secrets: inherit
+    with:
+      env_name: ${{ inputs.env_name }}
