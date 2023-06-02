@@ -10,11 +10,13 @@ on:
     paths:
       - '.github/**'
       - 'projects/monitoring/**'
+  pull_request_review:
+    types: [submitted]
 
 jobs:
   develop:
     name: CDK Deploy Actions Develop
-    if: ${{ github.base_ref == 'develop' }}
+    if: ${{ github.base_ref == 'develop' && github.event.review.state == 'approved'}}
     uses: ./.github/workflows/reuse_deploy.yml
     secrets: inherit
     with:
