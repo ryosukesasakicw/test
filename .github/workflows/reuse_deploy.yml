@@ -26,7 +26,7 @@ jobs:
     steps:
       - id: step1
         run: |
-          echo "--------------TEST-----------------"
+          echo "--------------TEST-----------------${{github.event.review}}"
 
   com-resources-deploy:
     name: Common Resources Deploy
