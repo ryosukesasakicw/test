@@ -26,7 +26,7 @@ jobs:
       accounts: ${{ steps.generate.outputs.accounts }}
     steps:
       - id: generate
-        run: echo "accounts=["test1","test2"]" >> "$GITHUB_OUTPUT"
+        run: echo "accounts=['test1','test2']" >> "$GITHUB_OUTPUT"
 
   com-resources-deploy:
     name: Common Resources Deploy
