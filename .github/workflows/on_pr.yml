@@ -1,46 +1,46 @@
-# name: Deploy Jobs For PR
-#1
-# on:
-#   pull_request:
-#     branches:
-#       - develop
-#       - 'release/**'
-#       - stage
-#       - main
-#     types:
-#       - closed
-#     paths:
-#       - '.github/**'
-#       - 'projects/monitoring/**'
+name: Deploy Jobs For PR
 
-# jobs:
-#   develop:
-#     name: CDK Deploy Actions Develop
-#     uses: ./.github/workflows/reuse_deploy.yml
-#     secrets: inherit
-#     with:
-#       env_name: develop
+on:
+  pull_request:
+    branches:
+      - develop
+      - 'release/**'
+      - stage
+      - main
+    types:
+      - closed
+    paths:
+      - '.github/**'
+      - 'projects/monitoring/**'
 
-#   release:
-#     name: CDK Deploy Actions Release
-#     if: ${{ startsWith(github.base_ref, 'release/') }}
-#     uses: ./.github/workflows/reuse_deploy.yml
-#     secrets: inherit
-#     with:
-#       env_name: release
+jobs:
+  develop:
+    name: CDK Deploy Actions Develop
+    uses: ./.github/workflows/reuse_deploy.yml
+    secrets: inherit
+    with:
+      env_name: develop
 
-#   stage:
-#     name: CDK Deploy Actions Stage
-#     if: ${{ github.base_ref == 'stage' }}
-#     uses: ./.github/workflows/reuse_deploy.yml
-#     secrets: inherit
-#     with:
-#       env_name: stage
+  release:
+    name: CDK Deploy Actions Release
+    if: ${{ startsWith(github.base_ref, 'release/') }}
+    uses: ./.github/workflows/reuse_deploy.yml
+    secrets: inherit
+    with:
+      env_name: release
 
-#   prod:
-#     name: CDK Deploy Actions Prod
-#     if: ${{ github.base_ref == 'main' }}
-#     uses: ./.github/workflows/reuse_deploy.yml
-#     secrets: inherit
-#     with:
-#       env_name: prod
+  stage:
+    name: CDK Deploy Actions Stage
+    if: ${{ github.base_ref == 'stage' }}
+    uses: ./.github/workflows/reuse_deploy.yml
+    secrets: inherit
+    with:
+      env_name: stage
+
+  prod:
+    name: CDK Deploy Actions Prod
+    if: ${{ github.base_ref == 'main' }}
+    uses: ./.github/workflows/reuse_deploy.yml
+    secrets: inherit
+    with:
+      env_name: prod

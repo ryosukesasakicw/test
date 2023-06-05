@@ -30,7 +30,7 @@ jobs:
 
   com-resources-deploy:
     name: Common Resources Deploy
-    needs: stack-resources-deploy
+    # needs: stack-resources-deploy
     uses: ./.github/workflows/reuse_run_script_members.yml
     secrets: inherit
     with:
