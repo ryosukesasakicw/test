@@ -7,8 +7,6 @@ on:
       - 'release/**'
       - stage
       - main
-    types:
-      - auto_merge_enabled
     paths:
       - '.github/**'
       - 'projects/monitoring/**'
