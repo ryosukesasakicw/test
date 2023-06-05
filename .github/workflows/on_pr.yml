@@ -7,6 +7,8 @@ on:
       - 'release/**'
       - stage
       - main
+    types:
+      - closed
     paths:
       - '.github/**'
       - 'projects/monitoring/**'
