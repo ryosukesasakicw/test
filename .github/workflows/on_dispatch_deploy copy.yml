@@ -1,0 +1,23 @@
+name: Dispatch Deploy Monitoring
+
+on:
+  workflow_dispatch:
+    inputs:
+      env_name:
+        description: 'environment name'
+        required: true
+        default: 'develop'
+        type: choice
+        options:
+          - develop
+          - release
+          - stage
+          - prod
+
+jobs:
+  dispatch_deploy:
+    name: Dispatch CDK Deploy Actions
+    uses: ./.github/workflows/reuse_deploy.yml
+    secrets: inherit
+    with:
+      env_name: ${{ inputs.env_name }}
