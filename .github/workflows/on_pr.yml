@@ -1,22 +1,21 @@
 name: Deploy Jobs For PR
 
 on:
-  # pull_request:
-    # branches:
-    #   - develop
-    #   - 'release/**'
-    #   - stage
-    #   - main
-    # paths:
-    #   - '.github/**'
-    #   - 'projects/monitoring/**'
-  pull_request_review:
-    types: [submitted]
+  pull_request:
+    branches:
+      - develop
+      - 'release/**'
+      - stage
+      - main
+    types:
+      - auto_merge_enabled
+    paths:
+      - '.github/**'
+      - 'projects/monitoring/**'
 
 jobs:
   develop:
     name: CDK Deploy Actions Develop
-    if: github.event.review.state == 'approved'
     uses: ./.github/workflows/reuse_deploy.yml
     secrets: inherit
     with:
