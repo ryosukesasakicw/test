@@ -30,13 +30,7 @@ jobs:
         with:
             list-files: json
             filters: |
-              changed:
-                - '${{matrix.directories}}/**/*.hcl'
-                - '${{matrix.directories}}/**/*.tf'
-                - '${{matrix.directories}}/**/*.tfvars'
-                - '${{matrix.directories}}/**/*.yaml'
-                - '${{matrix.directories}}/**/.terraform-version'
-                other_file:
-                  - 'gh_actions_config/**'
-                  - '!gh_actions_config/README.md'
-                  - '!gh_actions_config/docs/**'
+              other_file:
+                - 'gh_actions_config/**'
+                - '!gh_actions_config/README.md'
+                - '!gh_actions_config/docs/**'
