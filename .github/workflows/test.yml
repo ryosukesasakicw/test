@@ -13,6 +13,8 @@ jobs:
   change_directories:
     name: "Terraform Test: Find change directory"
     runs-on: ubuntu-latest
+    env:
+      target: 'test1'
     outputs:
       changed: ${{ steps.filter.outputs.changed }}
     steps:
@@ -26,7 +28,9 @@ jobs:
         list-files: json
         filters: |
           changed:
-            - 'test1/**'
+            - '${{env.target}}/**'
+            - '!${{env.target}}/**/*.png'
+            - '!${{env.target}}/**/*.md'
     - name: output logs
       working-directory: ${{ github.workspace }}
       run: |
