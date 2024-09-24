@@ -14,7 +14,7 @@ jobs:
     name: "Terraform Test: Find change directory"
     runs-on: ubuntu-latest
     outputs:
-      directories: ${{ steps.filter.outputs.changed }}
+      changed: ${{ steps.filter.outputs.changed }}
     steps:
     - name: Checkout
       uses: actions/checkout@v2
