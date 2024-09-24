@@ -1,0 +1,42 @@
+name: "Terraform Test: Env/Var/Sec for GitHub Actions Configs"
+
+on:
+  pull_request: {}
+  workflow_dispatch: {}
+
+permissions:
+  id-token: write # use id-token(federation role)
+  contents: read # use id-token(federation role)
+  pull-requests: read
+
+jobs:
+  terraform:
+    runs-on: ubuntu-latest
+    strategy:
+        fail-fast: false
+        matrix:
+          directories:
+            [
+              test1,
+              test2
+            ]
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v2
+
+      - name: Filter changes
+        id: filter
+        uses: dorny/paths-filter@v3
+        with:
+            list-files: json
+            filters: |
+              changed:
+                - '${{matrix.directories}}/**/*.hcl'
+                - '${{matrix.directories}}/**/*.tf'
+                - '${{matrix.directories}}/**/*.tfvars'
+                - '${{matrix.directories}}/**/*.yaml'
+                - '${{matrix.directories}}/**/.terraform-version'
+                other_file:
+                  - 'gh_actions_config/**'
+                  - '!gh_actions_config/README.md'
+                  - '!gh_actions_config/docs/**'
