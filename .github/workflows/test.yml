@@ -26,12 +26,14 @@ jobs:
       uses: dorny/paths-filter@v3
       with:
         list-files: json
-        predicate-quantifier: 'every'
         filters: |
           changed:
-            - '${{env.target}}/**'
-            - '!${{env.target}}/**/*.png'
-            - '!${{env.target}}/**/*.md'
+            - '${{env.target}}/**/*.hcl'
+            - '${{env.target}}/**/*.tf'
+            - '${{env.target}}/**/*.tfvars'
+            - '${{env.target}}/**/*.yaml'
+            - '${{env.target}}/**/.terraform-version'
+            
     - name: output logs
       working-directory: ${{ github.workspace }}
       run: |
