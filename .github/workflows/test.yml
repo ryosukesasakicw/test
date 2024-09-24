@@ -29,6 +29,11 @@ jobs:
             - '!**/*.png'
             - 'test1/**'
 
+    - name: output logs
+      working-directory: ${{ github.workspace }}
+      run: |
+          echo ${{ steps.filter.outputs.changed_files }} 
+
   terraform:
     needs: change_directories
     if: needs.change_directories.outputs.changed == 'true' 
