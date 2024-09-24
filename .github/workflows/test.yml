@@ -27,12 +27,11 @@ jobs:
           changed:
             - '!**/*.md'
             - '!**/*.png'
-            - 'test1/**'
-
+            - '!test1/**'
     - name: output logs
       working-directory: ${{ github.workspace }}
       run: |
-          echo ${{ steps.filter.outputs.changed_files }} 
+        echo ${{ steps.filter.outputs.changed_files }} 
 
   terraform:
     needs: change_directories
