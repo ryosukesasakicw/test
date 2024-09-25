@@ -11,6 +11,7 @@ permissions:
 
 jobs:
   changed-check:
+    name: 'Terraform Test: Env/Var/Sec for GitHub Actions Configs'
     runs-on: ubuntu-latest
     outputs:
       changed_directories: ${{ steps.changes.outputs.directories }}
@@ -54,7 +55,15 @@ jobs:
       - name: Changed Directories
         run: |
           echo ${{ matrix.directory }}
-        
+      
+  terraform-test-complete:
+    name: 'Terraform Test: All completed.'
+    needs: terraform-test
+    runs-on: ubuntu-latest
+    steps:
+      - name: completed
+        run: |
+          echo "Terraform Test Completed"
 
   # terraform:
   #   runs-on: ubuntu-latest
