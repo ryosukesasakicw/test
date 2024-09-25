@@ -59,6 +59,7 @@ jobs:
   terraform-test-complete:
     name: 'Terraform Test: All completed.'
     needs: terraform-test
+    if: ${{ ! failure() }}
     runs-on: ubuntu-latest
     steps:
       - name: completed
