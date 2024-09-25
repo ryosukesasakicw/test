@@ -1,0 +1,86 @@
+name: "Terraform Test For PR"
+
+on:
+  pull_request: {}
+  workflow_dispatch: {}
+
+permissions:
+  id-token: write # use id-token(federation role)
+  contents: read # use id-token(federation role)
+  pull-requests: read
+
+jobs:
+  changed-check:
+    runs-on: ubuntu-latest
+    outputs:
+      changed_directories: ${{ steps.changes.outputs.directories }}
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v2
+
+      - name: Changed Files
+        id: filter
+        uses: dorny/paths-filter@v3
+        with:
+            list-files: json
+            filters: |
+              changed:
+                - 'test1/**'
+                - 'test2/**'
+
+      - name: Changed Directories
+        id: changes
+        env:
+          changed: ${{steps.filter.outputs.changed_files}}
+        run: |
+          targets="$( echo $changed | jq -r '.[]' | jq -s -R 'split("\n") | map(select(contains("/docs/") or contains("/Readme.md") | not))'  )"
+          directories="$( echo $targets | jq -r '.[]' | cut -d'/' -f1 | sort -u | jq -s -R -c 'split("\n") | map(select(. != ""))' )"
+          echo "directories=${directories}" >> $GITHUB_OUTPUT
+
+  terraform-test:
+    needs: changed-check
+    runs-on: ubuntu-latest
+    if: needs.changed-check.outputs.changed_directories != '[]'
+    strategy:
+      matrix:
+        directory: ${{ fromJSON(needs.changed-check.outputs.changed_directories) }}
+    defaults:
+      run:
+        working-directory: ${{ matrix.directory }}
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v2
+
+      - name: Changed Directories
+        run: |
+          echo ${{ matrix.directory }}
+        
+
+  # terraform:
+  #   runs-on: ubuntu-latest
+  #   outputs:
+  #     gh_actions_config: ${{ steps.filter.outputs.gh_actions_config }}
+  #   strategy:
+  #       fail-fast: false
+  #       matrix:
+  #         directories:
+  #           [
+  #             test1,
+  #             test2
+  #           ]
+  #   steps:
+  #     - name: Checkout
+  #       uses: actions/checkout@v2
+
+  #     - name: Filter changes
+  #       id: filter
+  #       uses: dorny/paths-filter@v3
+  #       with:
+  #           list-files: json
+  #           filters: |
+  #             changed:
+  #               - '${{matrix.directories}}/**/*.hcl'
+  #               - '${{matrix.directories}}/**/*.tf'
+  #               - '${{matrix.directories}}/**/*.tfvars'
+  #               - '${{matrix.directories}}/**/*.yaml'
+  #               - '${{matrix.directories}}/**/.terraform-version'

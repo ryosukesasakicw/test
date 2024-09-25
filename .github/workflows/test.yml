@@ -1,0 +1,53 @@
+name: "Terraform Test: Env/Var/Sec for GitHub Actions Configs"
+
+on:
+  pull_request: {}
+  workflow_dispatch: {}
+
+permissions:
+  id-token: write # use id-token(federation role)
+  contents: read # use id-token(federation role)
+  pull-requests: read
+
+jobs:
+  change_directories:
+    name: "Terraform Test: Find change directory"
+    runs-on: ubuntu-latest
+    env:
+      target: 'test1'
+    outputs:
+      changed: ${{ steps.filter.outputs.changed }}
+    steps:
+    - name: Checkout
+      uses: actions/checkout@v2
+
+    - name: Filter changes
+      id: filter
+      uses: dorny/paths-filter@v3
+      with:
+        list-files: json
+        filters: |
+          changed:
+            - '${{env.target}}/**/*.hcl'
+            - '${{env.target}}/**/*.tf'
+            - '${{env.target}}/**/*.tfvars'
+            - '${{env.target}}/**/*.yaml'
+            - '${{env.target}}/**/.terraform-version'
+            
+    - name: output logs
+      working-directory: ${{ github.workspace }}
+      run: |
+        echo ${{ steps.filter.outputs.changed_files }} 
+
+  terraform:
+    needs: change_directories
+    if: needs.change_directories.outputs.changed == 'true' 
+    runs-on: ubuntu-latest
+    steps:
+    - name: Checkout
+      uses: actions/checkout@v2
+
+    - name: output logs
+      working-directory: ${{ github.workspace }}
+      run: |
+        echo ${{ needs.change_directories.outputs.changed_files }} 
