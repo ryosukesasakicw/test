@@ -1,4 +1,4 @@
-name: "Terraform Test: Env/Var/Sec for GitHub Actions Configs"
+name: "Terraform Test For PR"
 
 on:
   pull_request: {}
@@ -37,7 +37,7 @@ jobs:
           directories="$( echo $targets | jq -r '.[]' | cut -d'/' -f1 | sort -u | jq -s -R -c 'split("\n") | map(select(. != ""))' )"
           echo "directories=${directories}" >> $GITHUB_OUTPUT
 
-  test:
+  terraform-test:
     needs: changed-check
     runs-on: ubuntu-latest
     if: needs.changed-check.outputs.changed_directories != '[]'
@@ -53,9 +53,8 @@ jobs:
 
       - name: Changed Directories
         run: |
-          echo ${{ matrix.project }}
-      
-
+          echo ${{ matrix.directory }}
+        
 
   # terraform:
   #   runs-on: ubuntu-latest
