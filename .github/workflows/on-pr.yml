@@ -11,7 +11,7 @@ permissions:
 
 jobs:
   changed-check:
-    name: 'Terraform Test: Env/Var/Sec for GitHub Actions Configs'
+    name: 'Terraform Test: Check Changed directories'
     runs-on: ubuntu-latest
     outputs:
       changed_directories: ${{ steps.changes.outputs.directories }}
@@ -39,6 +39,7 @@ jobs:
           echo "directories=${directories}" >> $GITHUB_OUTPUT
 
   terraform-test:
+    name: 'Terraform Test'
     needs: changed-check
     runs-on: ubuntu-latest
     if: needs.changed-check.outputs.changed_directories != '[]'
