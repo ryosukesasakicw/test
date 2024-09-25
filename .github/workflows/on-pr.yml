@@ -33,7 +33,8 @@ jobs:
         env:
           changed: ${{steps.filter.outputs.changed_files}}
         run: |
-          projects="$( echo $changed | jq -r '.[]' | cut -d'/' -f2 | sort | uniq | jq -s -R -c 'split("\n") | map("apps/" + select(. != ""))' )"
+          # projects="$( echo $changed | jq -r '.[]' | cut -d'/' -f2 | sort | uniq | jq -s -R -c 'split("\n") | map("apps/" + select(. != ""))' )"
+          projects="$( echo $changed | jq -r '.[]' )"
           echo $projects
           echo "projects=${projects}" >> $GITHUB_OUTPUT
 
