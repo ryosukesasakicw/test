@@ -56,6 +56,7 @@ jobs:
       - name: Changed Directories
         run: |
           echo ${{ matrix.directory }}
+          exit 1
       
   terraform-test-complete:
     name: 'Terraform Test: All completed.'
