@@ -58,7 +58,7 @@ jobs:
           echo ${{ matrix.directory }}
       
   terraform-test-complete:
-    name: 'Terraform Test: All completed.'
+    name: 'Terraform Test For PR'
     needs: terraform-test
     if: ${{ ! failure() }}
     runs-on: ubuntu-latest
