@@ -27,7 +27,7 @@ jobs:
             filters: |
               changed:
                 - 'gh_actions_config/**'
-                - 'waf/**'
+                - 'test1/**'
 
       - name: Changed Directories
         id: changes
@@ -53,6 +53,7 @@ jobs:
       - name: TEST Echo
         run: |
           echo ${{ matrix.directory }}
+          exit 1
 
       - name: Checkout
         uses: actions/checkout@v2
