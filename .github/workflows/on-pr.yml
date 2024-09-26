@@ -1,4 +1,4 @@
-name: "Terraform Test For PR"
+name: 'Terraform Test For PR'
 
 on:
   pull_request: {}
@@ -26,8 +26,8 @@ jobs:
             list-files: json
             filters: |
               changed:
-                - 'test1/**'
-                - 'test2/**'
+                - 'gh_actions_config/**'
+                - 'waf/**'
 
       - name: Changed Directories
         id: changes
@@ -50,15 +50,62 @@ jobs:
       run:
         working-directory: ${{ matrix.directory }}
     steps:
+      - name: TEST Echo
+        run: |
+          echo ${{ matrix.directory }}
+
       - name: Checkout
         uses: actions/checkout@v2
 
-      - name: Changed Directories
-        run: |
-          echo ${{ matrix.directory }}
-      
+      # - name: Setup AWS Credentials
+      #   uses: ./.github/actions/configure-aws-creds
+      #   with:
+      #     region: ${{ vars.REGION }}
+      #     account_id: ${{ vars.ACCOUNT_ID }}
+      #     role_name: ${{ env.ROLE_NAME }}
+
+      # - name: Cache aqua tools
+      #   id: cache-tools
+      #   uses: actions/cache@v4
+      #   with:
+      #     path: ~/.local/share/aquaproj-aqua
+      #     key: cache-tools-${{ hashFiles('aqua.yaml') }}
+      # - uses: aquaproj/aqua-installer@6ce1f8848ec8e61f14d57bd5d7597057a6dd187c # v3.0.1
+      #   with:
+      #     aqua_version: v2.30.0
+     
+      # - name: Change dir and get version
+      #   id: get_version
+      #   shell: bash
+      #   run: |
+      #     tf_version=$(cat .terraform-version)
+      #     echo "tf_version=${tf_version}" >> "$GITHUB_OUTPUT"
+
+      # - name: Setup Terraform
+      #   uses: hashicorp/setup-terraform@v2
+      #   with:
+      #     terraform_version: ${{ steps.get_version.outputs.tf_version }}
+
+      # - name: Terraform Format
+      #   run: terraform fmt -check
+
+      # - name: Terraform Init
+      #   run: terraform init -backend-config="bucket=idpf-ops-state-${{ vars.ACCOUNT_ID }}"
+
+      # - name: Terraform Validate
+      #   run: terraform validate -no-color
+
+      # - name: 'Terraform Test: gh_actions_config'
+      #   if: ${{ matrix.directory == 'gh_actions_config' }}
+      #   uses: ./.github/actions/terraform-test-gh-actions-config
+
+      # - name: 'Terraform Test: waf'
+      #   if: ${{ matrix.directory == 'waf' }}
+      #   uses: ./.github/actions/terraform-test-waf
+
+
   terraform-test-complete:
-    name: 'Terraform Test For PR'
+    name: 'Terraform Test: Completed'
     needs: terraform-test
     if: ${{ ! failure() }}
     runs-on: ubuntu-latest
@@ -66,32 +113,3 @@ jobs:
       - name: completed
         run: |
           echo "Terraform Test Completed"
-
-  # terraform:
-  #   runs-on: ubuntu-latest
-  #   outputs:
-  #     gh_actions_config: ${{ steps.filter.outputs.gh_actions_config }}
-  #   strategy:
-  #       fail-fast: false
-  #       matrix:
-  #         directories:
-  #           [
-  #             test1,
-  #             test2
-  #           ]
-  #   steps:
-  #     - name: Checkout
-  #       uses: actions/checkout@v2
-
-  #     - name: Filter changes
-  #       id: filter
-  #       uses: dorny/paths-filter@v3
-  #       with:
-  #           list-files: json
-  #           filters: |
-  #             changed:
-  #               - '${{matrix.directories}}/**/*.hcl'
-  #               - '${{matrix.directories}}/**/*.tf'
-  #               - '${{matrix.directories}}/**/*.tfvars'
-  #               - '${{matrix.directories}}/**/*.yaml'
-  #               - '${{matrix.directories}}/**/.terraform-version'
