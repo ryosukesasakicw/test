@@ -1,0 +1,39 @@
+name: 'Terraform Test For PR'
+
+on:
+  # pull_request: {}
+  workflow_dispatch: {}
+
+permissions:
+  id-token: write # use id-token(federation role)
+  contents: read # use id-token(federation role)
+  pull-requests: read
+
+jobs:
+  changed-check:
+    name: 'Terraform Test: Check Changed directories'
+    runs-on: ubuntu-latest
+    outputs:
+      changed_directories: ${{ steps.changes.outputs.directories }}
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v2
+
+      - name: Changed Files
+        id: filter
+        uses: dorny/paths-filter@v3
+        with:
+            list-files: json
+            filters: |
+              changed:
+                - 'gh_actions_config/**'
+                - 'waf/**'
+
+      - name: Changed Directories
+        id: changes
+        env:
+          changed: ${{steps.filter.outputs.changed_files}}
+        run: |
+          targets="$( echo $changed | jq -r '.[]' | jq -s -R 'split("\n") | map(select(contains("/docs/") or contains("/Readme.md") | not))'  )"
+          directories="$( echo $targets | jq -r '.[]' | cut -d'/' -f1 | sort -u | jq -s -R -c 'split("\n") | map(select(. != ""))' )"
+          echo "directories=${directories}" >> $GITHUB_OUTPUT
