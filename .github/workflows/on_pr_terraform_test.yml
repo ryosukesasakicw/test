@@ -33,7 +33,7 @@ jobs:
       - name: Changed Directories
         id: changes
         env:
-          changed: ${{steps.filter.outputs.test1.changed_files}}
+          changed: ${{steps.filter.outputs.test1_files}}
         run: |
           targets="$( echo $changed | jq -r '.[]' | jq -s -R 'split("\n") | map(select(contains("/docs/") or contains("/Readme.md") | not))'  )"
           directories="$( echo $targets | jq -r '.[]' | cut -d'/' -f1 | sort -u | jq -s -R -c 'split("\n") | map(select(. != ""))' )"
